@@ -1,6 +1,7 @@
 SELECT CAST(track_id AS varchar)
 FROM track; 
 
+--
 
 SELECT BILLING_ADDRESS, 
        BILLING_CITY 
@@ -9,3 +10,11 @@ WHERE (CAST(invoice_date AS date) <= '2009-09-30')
       AND (CAST(invoice_date AS date) >= '2009-09-01')
       AND (NOT BILLING_COUNTRY = 'USA' AND NOT BILLING_COUNTRY = 'Brazil')
       AND total > 2;
+
+--
+
+SELECT *
+FROM invoice
+WHERE (CAST(invoice_date AS DATE)between '2009-03-04' and '2012-02-09')                    -- Including dates
+      AND (total < 5)
+      AND billing_country NOT IN ('Canada', 'Brazil','Finland')
