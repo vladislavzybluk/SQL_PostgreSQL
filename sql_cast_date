@@ -18,3 +18,12 @@ FROM invoice
 WHERE (CAST(invoice_date AS DATE)between '2009-03-04' and '2012-02-09')                    -- Including dates
       AND (total < 5)
       AND billing_country NOT IN ('Canada', 'Brazil','Finland')
+
+
+SELECT name--*
+FROM track
+WHERE (bytes > 1000000000)
+      OR ((MILLISECONDS>300000) 
+          AND (COMPOSER LIKE '%Bono%')
+          AND(GENRE_ID IN (7,8,9,10))
+         )
