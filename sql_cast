@@ -1,2 +1,0 @@
-SELECT CAST(track_id AS varchar)
-FROM track; 

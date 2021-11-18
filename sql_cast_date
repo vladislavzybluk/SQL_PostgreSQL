@@ -1,0 +1,11 @@
+SELECT CAST(track_id AS varchar)
+FROM track; 
+
+
+SELECT BILLING_ADDRESS, 
+       BILLING_CITY 
+FROM invoice 
+WHERE (CAST(invoice_date AS date) <= '2009-09-30')
+      AND (CAST(invoice_date AS date) >= '2009-09-01')
+      AND (NOT BILLING_COUNTRY = 'USA' AND NOT BILLING_COUNTRY = 'Brazil')
+      AND total > 2;
