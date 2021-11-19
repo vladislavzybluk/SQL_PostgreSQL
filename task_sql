@@ -1,0 +1,13 @@
+# Добавьте к выгруженным полям информацию о месяце и неделе заказа. Информацию о дате хранит поле invoice_date. 
+# Месяц заказа должен быть представлен первым числом месяца, а неделя заказа — номером недели.
+# Не забудьте изменить тип данных поля invoice_date, чтобы применить функции для работы с датой.
+
+
+SELECT customer_id,
+       invoice_date,
+       total,
+       EXTRACT(WEEK FROM CAST (invoice_date AS TIMESTAMP)),
+       DATE_TRUNC('month', CAST(invoice_date AS date))
+FROM invoice
+WHERE (customer_id BETWEEN 20 AND 50)
+;
