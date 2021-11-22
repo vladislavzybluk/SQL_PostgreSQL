@@ -1,0 +1,20 @@
+select customer_id,
+       invoice_date,
+       total,
+       EXTRACT(WEEK FROM CAST(invoice_date AS date)),
+       DATE_TRUNC('month', CAST(invoice_date AS timestamp))
+       
+       from
+(SELECT customer_id,  -- сам по себе этот запрос работать не будет потому что он фильтует данные которые не создались поэтому оформил в форме подзапроса
+       invoice_date,
+       total,
+       DATE_TRUNC('month', CAST(invoice_date AS date)),
+       --EXTRACT(WEEK FROM CAST(invoice_date AS date)),
+       EXTRACT(WEEK FROM CAST(invoice_date AS timestamp))
+       
+       
+       
+FROM invoice
+WHERE (customer_id BETWEEN 20 AND 50)
+) src
+where DATE_PART IN (5,7,10,24,48);
