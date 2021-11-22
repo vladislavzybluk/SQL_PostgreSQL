@@ -18,3 +18,31 @@ FROM invoice
 WHERE (customer_id BETWEEN 20 AND 50)
 ) src
 where DATE_PART IN (5,7,10,24,48);
+
+
+
+
+--select *
+
+SELECT customer_id,
+       invoice_date,
+       total,
+       invoice_id,
+       BILLING_ADDRESS,
+       BILLING_CITY,
+       BILLING_STATE,
+       BILLING_COUNTRY,
+       BILLING_POSTAL_CODE
+
+from (SELECT *,
+        EXTRACT(DAY FROM CAST(invoice_date AS timestamp)) 
+FROM invoice
+) src
+where DATE_PART IN (1);
+
+
+-- more simpler way
+
+SELECT EMAIL
+FROM staff
+WHERE  EXTRACT(YEAR FROM CAST(HIRE_DATE AS timestamp)) = 2002 AND CITY = 'Calgary';
