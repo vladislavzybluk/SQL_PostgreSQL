@@ -6,3 +6,13 @@ SELECT total,
        END
 FROM invoice
 LIMIT 10; 
+
+
+SELECT total,
+       CASE
+           WHEN total >= 5 AND total < 10 THEN 'средний'
+           WHEN total >= 10 THEN 'крупный'
+           ELSE 'маленький'
+       END
+FROM invoice
+LIMIT 10; 
