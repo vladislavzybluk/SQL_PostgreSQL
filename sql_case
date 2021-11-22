@@ -7,6 +7,7 @@ SELECT total,
 FROM invoice
 LIMIT 10; 
 
+-- --
 
 SELECT total,
        CASE
@@ -16,3 +17,17 @@ SELECT total,
        END
 FROM invoice
 LIMIT 10; 
+
+-- --
+
+SELECT  last_name,
+        first_name,
+        title, 
+        CASE
+            WHEN title LIKE '%IT%' THEN 'разработка'
+            WHEN title LIKE '%Manager%' AND title NOT LIKE '%IT%' THEN 'отдел продаж'
+            WHEN title LIKE '%Support%' THEN 'поддержка'
+        
+        END
+        
+FROM staff;
