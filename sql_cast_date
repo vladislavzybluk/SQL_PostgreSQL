@@ -27,3 +27,14 @@ WHERE (bytes > 1000000000)
           AND (COMPOSER LIKE '%Bono%')
           AND(GENRE_ID IN (7,8,9,10))
          )
+
+
+
+
+SELECT customer_id,
+       COUNT(customer_id)
+FROM invoice
+WHERE (CAST(invoice_date AS DATE)between '2011-05-25' and '2011-09-25')  AND billing_country = 'USA' -- сюда впишите условия
+GROUP BY customer_id
+ORDER BY COUNT(invoice_id) DESC-- добавьте данные для сортировки
+LIMIT 5;
