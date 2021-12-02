@@ -31,3 +31,17 @@ SELECT  last_name,
         END
         
 FROM staff;
+
+
+-- -- 
+
+SELECT SUM(total),
+       CASE
+           WHEN total < 1 THEN 'low cost'
+           WHEN total >= 1 THEN 'high cost'
+       END
+FROM invoice
+GROUP BY CASE
+           WHEN total < 1 THEN 'low cost'
+           WHEN total >= 1 THEN 'high cost'
+       END
