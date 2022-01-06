@@ -27,3 +27,16 @@ WHERE (CAST(invoice_date AS date) >= '2011-09-01')
       AND (CAST(invoice_date AS date) <= '2011-09-30')
 GROUP BY (EXTRACT(DAY FROM CAST(invoice_date AS date)))
 HAVING SUM(total)<10 AND SUM(total)>1
+
+-- --
+
+SELECT billing_country,
+       
+       COUNT(*)-COUNT(billing_postal_code) -- here we can count is null fields (all strings minus strings where postal code isnt null)
+FROM invoice
+WHERE (billing_address LIKE '%Street%')
+      OR (billing_address LIKE '%Way%')
+      OR (billing_address LIKE '%Road%')
+      OR (billing_address LIKE '%Drive%') 
+GROUP BY billing_country 
+HAVING (COUNT(*)-COUNT(billing_postal_code))>6
