@@ -19,3 +19,11 @@ WHERE billing_country = 'USA' or billing_country = 'Germany' or billing_country 
 GROUP BY EXTRACT (YEAR FROM CAST(invoice_date AS timestamp))
 ORDER BY date_part DESC
 
+-- --
+
+SELECT SUM(total)
+FROM invoice
+WHERE (CAST(invoice_date AS date) >= '2011-09-01')
+      AND (CAST(invoice_date AS date) <= '2011-09-30')
+GROUP BY (EXTRACT(DAY FROM CAST(invoice_date AS date)))
+HAVING SUM(total)<10 AND SUM(total)>1
