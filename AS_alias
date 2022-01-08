@@ -1,0 +1,8 @@
+SELECT billing_country,
+       count(invoice_id) as total_purchases,
+       SUM(total) as total_revenue,
+       ROUND(AVG(total), 2) as average_revenue
+FROM invoice
+GROUP BY billing_country
+ORDER BY average_revenue DESC
+LIMIT 10;
