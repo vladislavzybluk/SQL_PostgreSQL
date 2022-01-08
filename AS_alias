@@ -6,3 +6,14 @@ FROM invoice
 GROUP BY billing_country
 ORDER BY average_revenue DESC
 LIMIT 10;
+
+-- --
+
+SELECT SUM(rental_rate),
+       --rating,
+       CASE
+           WHEN rating = 'G' THEN 'без ограничений'
+           WHEN rating != 'G' THEN 'с ограничениями'
+       END AS new_rating
+FROM movie
+GROUP BY new_rating--, rating
