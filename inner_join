@@ -1,0 +1,8 @@
+SELECT  p.name as playlist_name,
+        SUM(t.unit_price) as total_revenue
+FROM track AS t
+INNER JOIN invoice_line AS i ON t.track_id=i.track_id
+INNER JOIN playlist_track AS pl ON t.track_id=pl.track_id
+INNER JOIN playlist AS p ON pl.playlist_id = p.playlist_id
+GROUP BY p.name
+ORDER BY total_revenue DESC
