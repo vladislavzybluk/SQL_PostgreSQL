@@ -18,4 +18,16 @@ INNER JOIN invoice AS i ON il.invoice_id=i.invoice_id
 GROUP BY g.name
 ORDER BY total_orders DESC
 
+-- --
 
+SELECT c.name AS uniq
+        
+FROM movie AS m
+
+INNER JOIN film_category AS fc ON m.film_id=fc.film_id
+INNER JOIN film_actor AS fa ON m.film_id=fa.film_id
+INNER JOIN actor AS a ON a.actor_id=fa.actor_id
+INNER JOIN category AS c ON c.category_id=fc.category_id
+WHERE (a.first_name LIKE '%Uma%')
+      AND (a.last_name LIKE '%Wood%')
+GROUP BY uniq
