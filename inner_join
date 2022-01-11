@@ -6,3 +6,16 @@ INNER JOIN playlist_track AS pl ON t.track_id=pl.track_id
 INNER JOIN playlist AS p ON pl.playlist_id = p.playlist_id
 GROUP BY p.name
 ORDER BY total_revenue DESC
+
+-- --
+
+SELECT  g.name,
+        count(i.invoice_id)  as total_orders
+FROM track AS t
+INNER JOIN genre AS g ON g.genre_id = t.genre_id
+INNER JOIN invoice_line AS il ON il.track_id = t.track_id
+INNER JOIN invoice AS i ON il.invoice_id=i.invoice_id
+GROUP BY g.name
+ORDER BY total_orders DESC
+
+
