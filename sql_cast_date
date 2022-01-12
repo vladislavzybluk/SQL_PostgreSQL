@@ -1,7 +1,7 @@
 SELECT CAST(track_id AS varchar)
 FROM track; 
 
---
+-- --
 
 SELECT BILLING_ADDRESS, 
        BILLING_CITY 
@@ -11,7 +11,7 @@ WHERE (CAST(invoice_date AS date) <= '2009-09-30')
       AND (NOT BILLING_COUNTRY = 'USA' AND NOT BILLING_COUNTRY = 'Brazil')
       AND total > 2;
 
---
+-- --
 
 SELECT *
 FROM invoice
@@ -19,6 +19,7 @@ WHERE (CAST(invoice_date AS DATE)between '2009-03-04' and '2012-02-09')         
       AND (total < 5)
       AND billing_country NOT IN ('Canada', 'Brazil','Finland')
 
+-- --
 
 SELECT name--*
 FROM track
@@ -29,7 +30,7 @@ WHERE (bytes > 1000000000)
          )
 
 
-
+-- --
 
 SELECT customer_id,
        COUNT(customer_id)
@@ -38,3 +39,12 @@ WHERE (CAST(invoice_date AS DATE)between '2011-05-25' and '2011-09-25')  AND bil
 GROUP BY customer_id
 ORDER BY COUNT(invoice_id) DESC-- добавьте данные для сортировки
 LIMIT 5;
+
+-- --
+
+SELECT EXTRACT(year from CAST(invoice_date AS timestamp)) AS year_of_invoice,
+       COUNT(DISTINCT(name))
+FROM track AS t
+LEFT JOIN invoice_line AS il ON t.track_id = il.track_id
+LEFT JOIN invoice AS i ON il.invoice_id = i.invoice_id
+GROUP BY year_of_invoice 
