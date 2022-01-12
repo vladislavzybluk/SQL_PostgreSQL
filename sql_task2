@@ -1,7 +1,5 @@
-SELECT -- впишите поле с категориями
-       --DATE_TRUNC('week', invoice_date ),
-       DATE_TRUNC('week', CAST(invoice_date AS timestamp)),
-       SUM(total),
+SELECT     DATE_TRUNC('week', CAST(invoice_date AS timestamp)),
+           SUM(total),
 	   COUNT(DISTINCT customer_id),
 	   SUM(total)/COUNT(DISTINCT customer_id)
 FROM invoice
