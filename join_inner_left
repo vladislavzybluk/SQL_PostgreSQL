@@ -41,3 +41,11 @@ LEFT JOIN client AS c ON c.support_rep_id = s.employee_id
 GROUP BY employee_last_name
 ORDER BY all_customers desc
 limit 10
+
+-- --
+
+SELECT s.last_name as manager_last_name,
+       mn.last_name as employee_last_name
+FROM staff AS s
+RIGHT JOIN staff AS mn ON mn.reports_to=s.employee_id
+
