@@ -31,3 +31,13 @@ INNER JOIN category AS c ON c.category_id=fc.category_id
 WHERE (a.first_name LIKE '%Uma%')
       AND (a.last_name LIKE '%Wood%')
 GROUP BY uniq
+
+-- --
+
+SELECT  s.last_name as employee_last_name,
+        count(c.customer_id) as all_customers
+FROM staff as s
+LEFT JOIN client AS c ON c.support_rep_id = s.employee_id
+GROUP BY employee_last_name
+ORDER BY all_customers desc
+limit 10
