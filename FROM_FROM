@@ -42,3 +42,25 @@ FROM
        LIMIT 40) AS top
     GROUP BY top.rating
     ORDER BY avg_length) AS mm
+
+-- --
+
+SELECT billing_country
+FROM
+(
+    SELECT  billing_country,
+            sum(ii.avg_total) as ii_avg
+    FROM
+        (SELECT  billing_country,
+                AVG(total) as avg_total,
+                EXTRACT(month from CAST(invoice_date AS timestamp)) as month
+        FROM invoice
+        WHERE EXTRACT(year from CAST(invoice_date AS timestamp)) = 2009
+        GROUP BY billing_country, EXTRACT(month from CAST(invoice_date AS timestamp))) as ii
+    WHERE ((month = 10) or (month = 7) or (month = 5) or (month = 2))
+
+    GROUP BY billing_country
+    ) as iii
+WHERE iii.ii_avg > 10
+
+
