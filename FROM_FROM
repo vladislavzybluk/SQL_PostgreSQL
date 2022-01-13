@@ -1,0 +1,18 @@
+SELECT rating,
+        MAX(length) AS min_length,
+        MIN(length) AS max_length,
+        AVG(length) AS avg_length,
+        MAX(rental_rate) AS min_rental_rate,
+        MIN(rental_rate) AS max_rental_rate,
+        AVG(rental_rate) AS avg_rental_rate
+FROM
+(SELECT title,
+       rental_rate,
+	   length,
+	   rating
+FROM movie
+WHERE rental_rate > 2
+ORDER BY length DESC
+LIMIT 40) AS m
+GROUP BY rating
+ORDER BY avg_length ASC
