@@ -1,0 +1,15 @@
+SELECT i.billing_country,
+       MIN (i.total) AS min_total,
+       MAX (i.total) AS max_total,
+       AVG (i.total) AS avg_total
+FROM invoice AS i
+--LEFT JOIN invoice_line AS il ON il.invoice_id = i.invoice_id
+WHERE i.invoice_id IN (SELECT invoice_id
+                        FROM invoice_line
+                        GROUP BY invoice_id
+                        HAVING COUNT(track_id) > 5)
+AND i.total > (SELECT AVG(unit_price)
+                            FROM invoice_line)   
+ 
+GROUP BY i.billing_country
+ORDER BY avg_total DESC;
