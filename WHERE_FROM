@@ -13,3 +13,13 @@ AND i.total > (SELECT AVG(unit_price)
  
 GROUP BY i.billing_country
 ORDER BY avg_total DESC;
+
+-- -- 
+
+select distinct(billing_city)
+from invoice
+where total > ((select avg(total)
+from invoice
+where EXTRACT(year from CAST(invoice_date AS timestamp)) = 2009))
+
+
