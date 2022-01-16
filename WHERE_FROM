@@ -23,3 +23,41 @@ from invoice
 where EXTRACT(year from CAST(invoice_date AS timestamp)) = 2009))
 
 
+-- -- 
+
+SELECT  year_2011,
+        year_2012,
+        year_2013,
+        i1.month 
+        
+FROM 
+
+(select  count(i2011.invoice_id) as year_2011,
+         EXTRACT(month from CAST(invoice_date AS timestamp)) as month
+from invoice as i2011
+where EXTRACT(year from CAST(invoice_date AS timestamp)) = 2011
+group by EXTRACT(month from CAST(invoice_date AS timestamp))) as i1
+
+LEFT JOIN 
+
+(select  count(i2012.invoice_id) as year_2012,
+         EXTRACT(month from CAST(invoice_date AS timestamp)) as month
+from invoice as i2012
+where EXTRACT(year from CAST(invoice_date AS timestamp)) = 2012
+group by EXTRACT(month from CAST(invoice_date AS timestamp))) as i2
+
+ON i1.month = i2.month
+
+LEFT JOIN 
+
+(select  count(i2013.invoice_id) as year_2013,
+         EXTRACT(month from CAST(invoice_date AS timestamp)) as month
+from invoice as i2013
+where EXTRACT(year from CAST(invoice_date AS timestamp)) = 2013
+group by EXTRACT(month from CAST(invoice_date AS timestamp))) as i3
+
+ON i1.month = i3.month
+
+order by month  asc
+limit 12
+
