@@ -32,3 +32,37 @@ FROM (
         AND EXTRACT(month FROM CAST(invoice.invoice_date AS date))  <> 1
     
 ) as i2 on i1.customer_id=i2.customer_id) as cl ON c.customer_id=cl.customer_sorted
+
+-- --
+
+
+
+SELECT c.name as name_category,
+count(distinct fa.film_id) as total_films
+FROM category as c
+LEFT JOIN film_category as fc on c.category_id=fc.category_id
+LEFT JOIN film_actor as fa on fa.film_id=fc.film_id
+
+WHERE actor_id in (
+
+
+SELECT aaa.actor_id
+FROM(
+
+SELECT fa.actor_id, count(m.film_id) as total_films
+FROM movie as m
+LEFT JOIN film_actor as fa on fa.film_id=m.film_id
+WHERE release_year > 2013 
+GROUP BY fa.actor_id
+HAVING count(m.film_id) > 7
+ORDER BY total_films DESC
+
+) as aaa
+
+
+)
+
+GROUP BY c.name
+ORDER BY total_films DESC
+
+
