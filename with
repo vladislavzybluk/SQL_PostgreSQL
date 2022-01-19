@@ -34,3 +34,31 @@ LEFT JOIN wi3 ON wi1.month = wi3.month
 order by month  asc
 limit 12
 
+-- --
+
+WITH 
+y12 as (
+    SELECT EXTRACT(month FROM CAST(invoice_date AS timestamp)) as month_2012, 
+        sum(total) as sum_total_2012
+       FROM invoice
+       WHERE EXTRACT(year FROM CAST(invoice_date AS timestamp)) = 2012
+       group by month_2012
+        
+       ),
+  
+y13 as (SELECT EXTRACT(month FROM CAST(invoice_date AS timestamp)) as month_2013, 
+        sum(total) as sum_total_2013
+       FROM invoice
+       WHERE EXTRACT(year FROM CAST(invoice_date AS timestamp)) = 2013
+       group by month_2013
+        
+       )
+
+
+
+SELECT  y12.month_2012 as month,
+        y12.sum_total_2012,
+        y13.sum_total_2013,
+        round(y13.sum_total_2013/y12.sum_total_2012*100 - 100) as perc
+FROM y12 left join y13 on y12.month_2012 = y13.month_2013
+order by month asc
