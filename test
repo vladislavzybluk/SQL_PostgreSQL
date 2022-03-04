@@ -1,4 +1,4 @@
-SELECT  distinct(id), 
-		created_at
-        
-FROM users
+SELECT o.id
+FROM channels AS c
+JOIN owners AS o ON c.owner_id = o.id
+WHERE o.is_ours=true
