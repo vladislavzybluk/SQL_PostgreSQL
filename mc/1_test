@@ -18,3 +18,5 @@ SELECT c.channel_id,
 FROM crsl
 LEFT JOIN cr ON crsl.connect_request_id = cr.request_id
 LEFT JOIN c ON cr.channel_id = c.channel_id
+
+--changed
