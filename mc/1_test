@@ -1,0 +1,20 @@
+WITH
+c AS    (SELECT id AS channel_id
+         FROM channels),
+
+cr AS   (SELECT id AS request_id,
+              channel_id
+         FROM connect_requests),
+
+crsl AS (SELECT connect_request_id,
+                status,
+                created_at
+         FROM connect_request_status_logs
+         WHERE status = 4)
+
+SELECT c.channel_id,
+       crsl.created_at
+
+FROM crsl
+LEFT JOIN cr ON crsl.connect_request_id = cr.request_id
+LEFT JOIN c ON cr.channel_id = c.channel_id
