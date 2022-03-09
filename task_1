@@ -1,0 +1,18 @@
+WITH
+    c AS    (SELECT id AS channel_id
+             FROM channels),
+    cr AS   (SELECT id AS request_id,
+                    channel_id
+             FROM connect_requests),
+    crsl AS (SELECT connect_request_id,
+                    to_char(created_at, 'YYYY MM') AS DATE,
+                    CASE
+                        WHEN (status = 4) THEN 'connect'
+                        WHEN (status = 10 OR status = 20) THEN 'disconnect' END
+             FROM connect_request_status_logs
+             WHERE status = 4 or status = 10 or status = 20 )
+
+SELECT c.channel_id, crsl.*
+FROM crsl
+         LEFT JOIN cr ON crsl.connect_request_id = cr.request_id
+         LEFT JOIN c ON cr.channel_id = c.channel_id
