@@ -7,4 +7,4 @@ FROM product_sales
 ORDER BY xxx, 
          order_date DESC;
          
--- xx - here uniq value which is last by the order_date
+-- xxx - here uniq value which is last by the order_date
