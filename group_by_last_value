@@ -1,0 +1,10 @@
+SELECT DISTINCN ON (xxx) xxx,
+       order_date, 
+       sale
+       
+FROM product_sales
+
+ORDER BY xxx, 
+         order_date DESC;
+         
+-- xx - here uniq value which is last by the order_date
