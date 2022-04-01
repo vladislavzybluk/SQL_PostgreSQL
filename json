@@ -1,0 +1,13 @@
+select user_id, sum(error_amount) as error_amount
+from (
+         select upm.user_id,
+                CASE WHEN (response->'data'->>'amount')::decimal - user_sum > 0 THEN (response->'data'->>'amount')::decimal - user_sum ELSE 0 END as error_amount
+         from payment_requests
+                  join user_payment_methods as upm on upm.id = payment_requests.user_payment_method_id
+
+
+         where (upm.provider = 'paypal_hyperwallet') and payment_requests.status = 10
+     ) t
+where error_amount > 0
+group by user_id
+order by user_id
