@@ -1,4 +1,4 @@
-SELECT DISTINCN ON (xxx) xxx,
+SELECT DISTINCT ON (xxx) xxx,
        order_date, 
        sale
        
