@@ -3,3 +3,13 @@ CREATE TABLE имя_таблицы (
     имя_столбца1 тип_данных,
     имя_столбца2 тип_данных,
     …); 
+
+-- пример
+
+CREATE TABLE agg_games_year (
+    record_id serial PRIMARY KEY,
+    year_of_release timestamp,
+    avg_critic_score real,
+    avg_user_score real,
+    total_copies_sold int
+); 
