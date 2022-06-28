@@ -1,0 +1,13 @@
+select t.id as t_id,
+       ti.id as ti_id,
+       t.type as t_type,
+       ti.type as ti_type,
+       ti.amount,
+       ti.created_at,
+       sum(ti.amount) over (PARTITION BY t.user_id ORDER BY ti.created_at) as cum_sum
+
+from transactions t
+         join transaction_items ti on t.id = ti.transaction_id
+where t.status not in (-1, -5)
+
+order by ti.created_at desc
