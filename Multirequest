@@ -1,0 +1,99 @@
+WITH co AS  (SELECT u1.id AS user_id, u1.email,
+             co.name AS country,
+             count(distinct(channel_id)) AS channels
+             FROM users u1
+                     JOIN user_channel uc ON u1.id = uc.user_id
+                     JOIN countries co ON u1.country_id = co.id
+             GROUP BY u1.id, co.name,u1.email),
+     ups AS (SELECT u2.id as user_id,
+                    CASE
+                        WHEN ups.is_express_payment_active = True THEN 'ДА'
+                        WHEN ups.is_express_payment_active = False THEN 'НЕТ'
+                        END as express_is_active,
+                    flexible_payments_percent as percent,
+                    CASE WHEN ups.express_payments_type_active = 1 THEN 'Гибкие'
+                         WHEN ups.express_payments_type_active = 2 THEN 'Ежедневные' END as express_type
+             FROM users u2
+                      JOIN user_payment_settings ups on u2.id = ups.user_id
+             WHERE ups.express_payments_type_active = 1),
+     vcrr AS (SELECT uc.user_id,
+                     round(SUM(channel_app+channel_aug+channel_ppp+channel_pug+channel_sct+channel_spt-usa_tax),2) as revenue
+              FROM view_connect_request_revenues vcrr
+                       JOIN connect_requests cr on vcrr.connect_request_id = cr.id
+                       JOIN channels c on cr.channel_id = c.id
+                       JOIN user_channel uc on c.id = uc.channel_id
+                       JOIN view_user_balances vub on uc.user_id = vub.user_id
+              WHERE vcrr.date BETWEEN '2022-06-01' AND '2022-06-30'
+              GROUP BY uc.user_id),
+     vub AS  (SELECT user_id,
+                     real_balance,
+                     credit_balance,
+                     balance as total_balance
+              FROM view_user_balances vub),
+     m as (SELECT c2.title,
+                  uc.user_id,
+                  m.manager_id,
+                  m.manager_name
+           FROM channels c2
+                    JOIN (SELECT  c.title, concat (u.first_name,' ', u.last_name) AS manager_name, u.id as manager_id
+                          FROM channels c
+                                   JOIN channel_managers cm ON c.id = cm.channel_id
+                                   JOIN users u ON cm.user_id = u.id) m ON c2.title = m.title
+                    JOIN user_channel uc on c2.id = uc.channel_id),
+     pr AS (SELECT pr.user_id,
+                   CASE when pr.user_amount > 0 THEN 'ДА'
+                        ELSE 'no' END AS withdraws
+            FROM (SELECT SUM(abs(pr.user_amount)) AS user_amount,
+                         u.id AS user_id
+                  FROM payment_requests pr
+                           JOIN user_payment_methods upm ON pr.user_payment_method_id = upm.id
+                           JOIN payment_methods pm ON upm.payment_method_id = pm.id
+                           JOIN payment_request_status_logs prsl on pr.id = prsl.payment_request_id
+                           JOIN users u ON upm.user_id = u.id
+                  WHERE prsl.status = 10 and prsl.is_active = true
+                  GROUP BY u.id) pr
+     ),
+     ex AS (SELECT x.used,
+                   x.user_id,
+                   CASE WHEN x.used = 1 THEN 'ДА'
+                        WHEN x.used = 0 THEN 'НЕТ' END as express_used
+            FROM (SELECT distinct  t3.user_id,
+                                   1 as used
+                  FROM transactions t3
+                           JOIN transaction_items ti3 on t3.id = ti3.transaction_id
+                  WHERE (t3.type = 20 or t3.type = 23 or ti3.type = 20 or ti3.type = 23) AND t3.status NOT IN (-1,-5)
+                  UNION ALL
+                  SELECT distinct t2.user_id, 0 as used
+                  FROM transactions t2
+                           JOIN transaction_items ti2 on t2.id = ti2.transaction_id
+                  WHERE t2.user_id NOT IN
+                        (SELECT distinct t.user_id
+                         FROM transactions t
+                                  JOIN transaction_items ti on t.id = ti.transaction_id
+                         WHERE (t.type = 20 or t.type = 23 or ti.type = 20 or ti.type = 23) AND t.status NOT IN (-1,-5))) x
+            ORDER BY x.user_id)
+
+SELECT co.user_id,
+       co.email,
+       ups.express_is_active,
+       ups.express_type,
+       ups.percent,
+       vcrr.revenue,
+       vub.total_balance,
+       vub.credit_balance,
+       vub.real_balance,
+       co.country,
+       co.channels,
+       m.manager_name,
+       pr.withdraws,
+       ex.express_used,
+       concat('https://mcpay.io/ru/adm/administrator/users/', co.user_id) as link
+
+
+FROM co
+JOIN ups on co.user_id = ups.user_id
+JOIN vcrr on co.user_id = vcrr.user_id
+JOIN vub on co.user_id = vub.user_id
+JOIN m on m.user_id = co.user_id
+JOIN pr on co.user_id = pr.user_id
+JOIN ex on co.user_id = ex.user_id
